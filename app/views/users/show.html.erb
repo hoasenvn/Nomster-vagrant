@@ -1,21 +1,30 @@
 <div class="booyah-box">
-  <div class="row">
+  <div class="row">    
     <div class="col-4">
-      <%= image_tag 'user.png' %>      
+      <div class="row justify-content-center">
+        <%= image_tag 'user.png' %> 
+        <h1><%= @user.email %></h1> 
+      </div>    
     </div>
-    <div class="col-8">
-      <h1><%= @user.email %></h1>
-      <h3>Member Since: <%= @user.created_at.strftime("%B %d, %Y") %></h3>
-      <% if @user.comments.count > 1 %>
-      <h4><%= @user.comments.count %> total Comments</h4>
-      <% else %>
-      <h4><%= @user.comments.count %> Comment</h4>
-      <% end %>
-      <% if @user.comments.where(rating: '5_stars').count > 1 %>
-      <h4><%= @user.comments.where(rating: '5_stars').count %> total Five-star Reviews</h4>
-      <% else %>
-      <h4><%= @user.comments.where(rating: '5_stars').count %> Five-star Review</h4>
-      <% end %>
+    <div class="col-8"> 
+      <div class="row justify-content-center">     
+        <h3>Member Since: <%= @user.created_at.strftime("%B %d, %Y") %></h3>
+      </div>                
+        <hr class="line1" />  
+      <div class="row justify-content-center"> 
+        <% if @user.comments.count > 1 %>
+        <h4><%= @user.comments.count %> total Comments</h4>
+        <% else %>
+        <h4><%= @user.comments.count %> Comment</h4>
+        <% end %>
+      </div>
+      <div class="row justify-content-center">  
+        <% if @user.comments.where(rating: '5_stars').count > 1 %>
+        <h4><%= @user.comments.where(rating: '5_stars').count %> total Five-star Reviews</h4>
+        <% else %>
+        <h4><%= @user.comments.where(rating: '5_stars').count %> Five-star Review</h4>
+        <% end %>
+      </div>
     </div> 
   </div>
   <div class="clear"></div>   
@@ -32,8 +41,34 @@
           <b><%= comment.humanized_rating %></b> -
         <% end %>
         <%= comment.message %>
-        <small><%= comment.user.email %></small>
+        <small><%= comment.user.email %></small>                 
       </blockquote>
     </div>
   <% end %>
 </div>
+<br /><br />
+<h1 class="text-center">My Places</h1>
+<br /><br />
+<% @user.places.each do |place| %>
+  <div class="booyah-box col-10 offset-1">
+    <h1><%= link_to place.name, place_path(place) %></h1><br />
+    <i><%= place.address %></i><br />
+    <p><%= place.description %></p><br />
+
+    <% if place.user.present? %>
+      <small><%= place.user.email %></small>
+    <% end %>
+
+    <% if place.comments.present? %>
+      <div class="col-12">
+        <blockquote>
+          <% if place.comments.last.humanized_rating.present? %>
+            <b><%= place.comments.last.humanized_rating %></b> -
+          <% end %>
+          <%= place.comments.last.message %>
+          <small><%= place.comments.last.user.email %></small>
+        </blockquote>
+      </div>
+    <% end %>
+  </div>
+<% end %>
